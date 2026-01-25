@@ -1,0 +1,6 @@
+- name: use role on host
+  hosts: machine_1
+  become: yes
+
+  roles: 
+    - base

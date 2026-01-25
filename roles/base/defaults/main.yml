@@ -1,0 +1,9 @@
+base_hostname: Jafara
+base_timezone: Asia/Tbilisi
+basic_packages:
+  - vim
+  - curl
+  - git
+  - htop
+  - unzip
+  - wget

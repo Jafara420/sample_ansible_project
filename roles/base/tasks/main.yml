@@ -1,0 +1,95 @@
+- name: Set hostname
+  hostname:
+    name: "{{ base_hostname }}"
+
+- name: Set timezone
+  timezone:
+    name: "{{ base_timezone }}"
+
+- name: Install NTP and enable timesync
+  package:
+    name: systemd-timesyncd
+    state: present
+      
+- name: Ensure time sync service is enabled and running
+  service:
+    name: systemd-timesyncd
+    state: started
+    enabled: yes
+
+- name: Update apt cache
+  apt:
+    update_cache: yes
+
+- name: Install basic packages
+  apt:
+    name: "{{ basic_packages }}"
+    state: present
+
+- name: create group
+  ansible.builtin.group:
+    name: devops
+
+- name: create a user
+  ansible.builtin.user:
+    name: devuser
+    shell: /bin/bash
+    group: devops
+    create_home: yes 
+    password: "123123"
+
+- name: file and directories
+  ansible.builtin.file:
+    path: /opt/devops
+    state: directory
+    mode: '0755'
+
+- name: add text to file
+  ansible.builtin.lineinfile:
+    path: /opt/devops/info.txt
+    line: "Ansible File Management Task"
+    create: yes
+
+- name: change directory ownership
+  ansible.builtin.file:
+    path: /opt/devops
+    owner: ansible
+
+- name: Delete the file if it exists
+  ansible.builtin.file:
+    path: /opt/devops/temp.txt
+    state: absent
+
+- name: update cache
+  ansible.builtin.apt:
+    update_cache: yes
+
+- name: Install git
+  ansible.builtin.apt:
+    name: git
+    state: present
+
+- name: Install vim
+  ansible.builtin.apt:
+    name: vim
+    state: present
+
+- name: Install curl
+  ansible.builtin.apt:
+    name: curl
+    state: present
+
+- name: check nginx
+  ansible.builtin.command: nginx -v
+  register: nginx_version
+  ignore_errors: yes
+
+- name: upgrade packages
+  ansible.builtin.apt:
+    upgrade: dist
+
+- name: remove telnet
+  ansible.builtin.apt:
+    name: telnet
+    state: absent
+
