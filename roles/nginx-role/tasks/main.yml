@@ -1,0 +1,53 @@
+- name: Install nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+
+
+- name: Create sites-enabled dir
+  ansible.builtin.file:
+    path: /etc/nginx/sites-enabled
+    state: directory
+    owner: root         
+    group: root       
+    mode: '0644'
+
+
+- name: Copy nginx config
+  ansible.builtin.copy:
+    src: nginx.conf
+    dest: /etc/nginx/nginx.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Copy mime.types config
+  ansible.builtin.copy:
+    src: mime.types
+    dest: /etc/nginx/mime.types
+    owner: root
+    group: root
+    mode: '0644'
+
+- name: Copy sample web config
+  ansible.builtin.copy:
+    src: web-sample.conf
+    dest: /etc/nginx/sites-enabled/web-sample.conf
+    owner: root
+    group: root
+    mode: '0644'
+
+
+- name: Ensure nginx is running and enabled
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: restart nginx
+  service:
+    name: nginx
+    state: restarted
+
+
+
